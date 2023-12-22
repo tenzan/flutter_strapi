@@ -1,0 +1,104 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android related
+**/android/**/*.gradle
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.*
+
+# iOS related
+**/ios/**/*.generated.xcconfig
+**/ios/**/*.xcworkspace
+**/ios/**/*.xcodeproj
+**/ios/**/*.xcuserstate
+**/ios/**/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/GeneratedPluginRegistrant.*
+
+# Windows related
+**/windows/flutter/ephemeral/
+
+# macOS related
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/GeneratedPluginRegistrant.*
+
+# Linux related
+**/linux/flutter/ephemeral/
+**/linux/.dart_tool/
+**/linux/flutter/generated_plugin_registrant.dart
+
+# Web related
+**/web/manifest.json
+
+# Build output
+/build/
+
+# Miscellaneous
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Packages
+packages.lock
+
+# Keys
+*.jks
+*.keystore
+*.pem
+
+# Firebase files
+**/google-services.json
+**/GoogleService-Info.plist
+
+# dotenv environment variables file
+.env
