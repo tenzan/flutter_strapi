@@ -5,6 +5,32 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() => runApp(const App());
 
+class WebSocketService {
+  final String socketUrl = "ws://127.0.0.1:3000/webhooks/article-updates";
+  late WebSocketChannel channel;
+  Function(dynamic)? onData;
+
+  void connect(Function(dynamic) onData) {
+    this.onData = onData;
+    channel = WebSocketChannel.connect(Uri.parse(socketUrl));
+    channel.stream.listen(
+      onData,
+      onError: (error) {
+        print('WebSocket error: $error');
+      },
+      onDone: () {
+        print('WebSocket connection closed');
+      },
+    );
+  }
+
+  void dispose() {
+    if (channel != null) {
+      channel.sink.close();
+    }
+  }
+}
+
 class App extends StatelessWidget {
   const App({super.key});
 
@@ -54,10 +80,47 @@ class ApiService {
   }
 }
 
-class ArticlesPage extends StatelessWidget {
-  final ApiService apiService = ApiService();
-
+class ArticlesPage extends StatefulWidget {
   ArticlesPage({super.key});
+
+  @override
+  _ArticlesPageState createState() => _ArticlesPageState();
+}
+
+class _ArticlesPageState extends State<ArticlesPage> {
+  final ApiService apiService = ApiService();
+  final WebSocketService webSocketService = WebSocketService();
+  List<Article>? articles;
+
+  @override
+  void initState() {
+    super.initState();
+    webSocketService.connect(_handleWebSocketData);
+    _fetchArticles();
+  }
+
+  void _fetchArticles() async {
+    try {
+      var fetchedArticles = await apiService.fetchArticles();
+      setState(() {
+        articles = fetchedArticles;
+      });
+    } catch (e) {
+      print('Failed to fetch articles: $e');
+    }
+  }
+
+  void _handleWebSocketData(dynamic data) {
+    print("WebSocket data received: $data");
+    // Trigger a refresh of articles when a new update is received
+    _fetchArticles();
+  }
+
+  @override
+  void dispose() {
+    webSocketService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,23 +128,14 @@ class ArticlesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Articles'),
       ),
-      body: FutureBuilder(
-        future: apiService.fetchArticles(),
-        builder: (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
-          if (snapshot.hasData) {
-            List<Article>? articles = snapshot.data;
-            return ListView.builder(
-              itemCount: articles!.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(articles[index].title),
-                subtitle: Text(articles[index].content),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+      body: articles == null
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemCount: articles!.length,
+        itemBuilder: (context, index) => ListTile(
+          title: Text(articles![index].title),
+          subtitle: Text(articles![index].content),
+        ),
       ),
     );
   }
