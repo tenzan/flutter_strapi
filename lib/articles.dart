@@ -53,9 +53,7 @@ class WebSocketService {
   }
 
   void dispose() {
-    if (channel != null) {
-      channel.sink.close();
-    }
+    channel.sink.close();
   }
 }
 
@@ -108,12 +106,12 @@ class _ArticlesPageState extends State<ArticlesPage> {
       body: articles == null
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-        itemCount: articles!.length,
-        itemBuilder: (context, index) => ListTile(
-          title: Text(articles![index].title),
-          subtitle: Text(articles![index].content),
-        ),
-      ),
+              itemCount: articles!.length,
+              itemBuilder: (context, index) => ListTile(
+                title: Text(articles![index].title),
+                subtitle: Text(articles![index].content),
+              ),
+            ),
     );
   }
 }
